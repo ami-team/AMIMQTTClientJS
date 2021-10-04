@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+
+		<title>Test</title>
+
+		<meta charset="utf-8" />
+
+		<style>
+
+			*, ::after, ::before {
+				box-sizing: border-box;
+			}
+
+			input[type="text"], textarea {
+
+				border: 1px solid #CCC;
+				border-radius: 4px;
+				padding: 4px;
+				width: 100%;
+			}
+
+			#FD5574C4_E473_5547_2ABA_A1A0C3D06014 {
+
+				border: 1px solid #CCC;
+				border-radius: 8px;
+				margin: 2rem auto;
+				padding: 16px;
+				width: 33%;
+			}
+
+			#FF479735_8BD9_BCB8_A61A_27B0B934EB6F {
+
+				background-color: black;
+				font-family: Helvetica;
+				color: white;
+			}
+
+		</style>
+
+		<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+
+		<script src="../dist/ami-mqtt-client.min.js"></script>
+
+	</head>
+	<body>
+
+		<div id="FD5574C4_E473_5547_2ABA_A1A0C3D06014">
+
+			<!-- *************************************************************************************************** -->
+
+			<div style="margin-top: 00px;">
+				Username:
+				<br />
+				<input type="text" id="FDED806A_716A_996E_D6BE_8B97F7420EB0" />
+			</div>
+
+			<div style="margin-top: 10px;">
+				Password:
+				<br />
+				<input type="text" id="EDB31955_0A29_66C8_26AD_BF4C024BD656" />
+			</div>
+
+			<div style="margin-top: 10px;">
+				Serveur name:
+				<br />
+				<input type="text" id="CBB8151B_97E5_52FF_F9CC_D5776867C059" />
+			</div>
+
+			<!-- *************************************************************************************************** -->
+
+			<div style="margin-top: 10px;">
+
+				<button type="button" id="E2301787_B369_BB00_73E8_6A1F7034945A">Connection</button>
+
+			</div>
+
+			<!-- *************************************************************************************************** -->
+
+			<div style="margin-top: 20px;">
+				Command:
+				<br />
+				<input type="text" id="CEC79BFA_4182_3783_0325_16BF28DE87FC" value="GetServerStatus" />
+			</div>
+
+			<!-- *************************************************************************************************** -->
+
+			<div style="margin-top: 10px;">
+
+				<button type="button" id="AC595B8F_6EB4_D12E_28BA_399E63F84D9C">Execute</button>
+
+				<button type="button" id="F3EF2F88_8239_C6FC_8B64_6520529CC815">Clean</button>
+
+			</div>
+
+			<!-- *************************************************************************************************** -->
+
+		</div>
+
+		<textarea rows="18" id="FF479735_8BD9_BCB8_A61A_27B0B934EB6F"></textarea>
+
+		<script>
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			$('#E2301787_B369_BB00_73E8_6A1F7034945A').prop('disabled', false);
+			$('#AC595B8F_6EB4_D12E_28BA_399E63F84D9C').prop('disabled', true);
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			$('#F3EF2F88_8239_C6FC_8B64_6520529CC815').click(function() {
+
+				$('#FF479735_8BD9_BCB8_A61A_27B0B934EB6F').val('');
+			});
+
+			$('#FF479735_8BD9_BCB8_A61A_27B0B934EB6F').val('');
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			$('#E2301787_B369_BB00_73E8_6A1F7034945A').click(function() {
+
+				/*----------------------------------------------------------------------------------------------------*/
+
+				var client = new AMIMQTTClient(
+					false, 'ccami012.in2p3.fr', Number(9001), '/ws',
+					$('#FDED806A_716A_996E_D6BE_8B97F7420EB0').val(),
+					$('#EDB31955_0A29_66C8_26AD_BF4C024BD656').val(),
+					$('#CBB8151B_97E5_52FF_F9CC_D5776867C059').val(), {
+						onSuccess: function() {
+
+							/*----------------------------------------------------------------------------------------*/
+
+							$('#E2301787_B369_BB00_73E8_6A1F7034945A').prop('disabled', true);
+							$('#AC595B8F_6EB4_D12E_28BA_399E63F84D9C').prop('disabled', false);
+
+							/*----------------------------------------------------------------------------------------*/
+
+							$('#AC595B8F_6EB4_D12E_28BA_399E63F84D9C').off().click(function() {
+
+								client.execute($('#CEC79BFA_4182_3783_0325_16BF28DE87FC').val()).done(function(data, token) {
+
+									$('#FF479735_8BD9_BCB8_A61A_27B0B934EB6F').val(data);
+
+								}).fail(function(message) {
+
+									alert(message);
+								});
+							});
+
+							/*----------------------------------------------------------------------------------------*/
+						}
+					}
+				);
+
+				/*----------------------------------------------------------------------------------------------------*/
+			});
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+		</script>
+
+	</body>
+</html>
