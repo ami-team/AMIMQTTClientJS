@@ -2486,17 +2486,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 function parseJwt(token) {
-  var parts = token.split('.');
+  try {
+    var parts = token.split('.');
 
-  if (parts.length > 1) {
-    var uriEncodedPayload = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join('');
-    var payload = decodeURIComponent(uriEncodedPayload);
-    return JSON.parse(payload);
+    if (parts.length > 1) {
+      var uriEncodedPayload = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join('');
+      var payload = decodeURIComponent(uriEncodedPayload);
+      return JSON.parse(payload);
+    } else {
+      return {};
+    }
+  } catch (e) {
+    return {};
   }
-
-  return {};
 }
 
 ;
@@ -2514,13 +2518,12 @@ var AMIMQTTClient = function () {
     _defineProperty(this, "_responseRegExp", new RegExp('AMI-RESPONSE<([0-9]+)>(.*)'));
 
     options = options || {};
-    var jwtData = parseJwt(password);
-
-    if (!('iss' in jwtData) || !('sub' in jwtData) || !('uuid' in jwtData)) {
-      throw 'invalid JWT password (mandatory payload data entries: `iss`, `sub`, `uuid`)';
-    }
-
-    this._uuid = jwtData.uuid;
+    var uuid = parseJwt(password).uuid || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = 16 * Math.random(),
+          v = c == 'x' ? r | 0x000000000 : r & 0x03 | 0x08;
+      return v.toString(16);
+    });
+    this._uuid = uuid;
     this._serverName = serverName;
     this._userOnSuccess = options.onSuccess || null;
     this._userOnFailure = options.onFailure || null;
@@ -2563,9 +2566,9 @@ var AMIMQTTClient = function () {
     };
 
     this._client.connect({
-      userName: username || '',
-      password: password || '',
       useSSL: useSSL,
+      userName: username,
+      password: password,
       reconnect: true,
       onSuccess: function onSuccess() {
         for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
