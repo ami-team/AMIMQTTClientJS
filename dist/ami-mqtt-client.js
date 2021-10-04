@@ -1,6 +1,6 @@
 /*!
  * ami-mqtt-client 1.0.0, AMI MQTT Client
- * https://gitlab.in2p3.fr/ami-team/ami-mqtt-client
+ * https://gitlab.in2p3.fr/ami-team/amimqttclient/
  * Copyright (c) 2021-2021 Jérôme Odier
  */
 /******/ (() => { // webpackBootstrap

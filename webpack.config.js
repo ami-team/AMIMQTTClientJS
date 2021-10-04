@@ -4,29 +4,29 @@ const PACKAGE = require('./package.json');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const BANNER = `ami-mqtt-client ` + PACKAGE.version + `, AMI MQTT Client
-https://gitlab.in2p3.fr/ami-team/ami-mqtt-client
-Copyright (c) 2021-` + new Date().getFullYear() + ` Jérôme Odier`;
+const BANNER = `ami-mqtt-client ${PACKAGE.version}, AMI MQTT Client
+https://gitlab.in2p3.fr/ami-team/amimqttclient/
+Copyright (c) 2021-${new Date().getFullYear()} Jérôme Odier`;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const BROWSER_LIST = [
-	">= 1%",
-	"last 1 major version",
-	"not dead",
-	"Chrome >= 45",
-	"Firefox >= 38",
-	"Edge >= 12",
-	"Explorer >= 10",
-	"iOS >= 9",
-	"Safari >= 9",
-	"Android >= 4.4",
-	"Opera >= 30"
+	'>= 1%',
+	'last 1 major version',
+	'not dead',
+	'Chrome >= 45',
+	'Firefox >= 38',
+	'Edge >= 12',
+	'Explorer >= 10',
+	'iOS >= 9',
+	'Safari >= 9',
+	'Android >= 4.4',
+	'Opera >= 30'
 ];
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-console.log("Building AMI MQTT Client for: " + BROWSER_LIST.join(", "));
+console.log('Building AMI MQTT Client for: ' + BROWSER_LIST.join(', '));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -61,7 +61,7 @@ module.exports = {
 						'presets': [
 							['@babel/preset-env', {
 								'targets': {
-									"browsers": BROWSER_LIST
+									'browsers': BROWSER_LIST
 								}
 							}]
 						]
