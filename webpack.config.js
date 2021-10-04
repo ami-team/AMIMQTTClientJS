@@ -38,7 +38,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	'entry': {
-		'ami-mqtt-client': path.resolve(__dirname, 'src/client.js'),
 		'ami-mqtt-client.min': path.resolve(__dirname, 'src/client.js')
 	},
 	'output': {
@@ -71,9 +70,6 @@ module.exports = {
 
 			/*--------------------------------------------------------------------------------------------------------*/
 		]
-	},
-	'externals': {
-		'bootstrap': 'bootstrap'
 	},
 	'plugins': [
 		new webpack.BannerPlugin({
