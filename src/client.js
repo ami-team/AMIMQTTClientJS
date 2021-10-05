@@ -63,6 +63,8 @@ export default class AMIMQTTClient
 
 	_cnt = 0x01;
 
+	_converter = 'AMIXmlToJson.xsl';
+
 	_responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+),(true|false)>(.*)', 's');
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -71,6 +73,8 @@ export default class AMIMQTTClient
 
 	constructor(useSSL, host, port, path, username, password, serverName, options)
 	{
+		serverName = serverName || '';
+
 		options = options || {};
 
 		/*------------------------------------------------------------------------------------------------------------*/
@@ -225,7 +229,7 @@ export default class AMIMQTTClient
 
 		const serverName = ('serverName' in options) ? (options.serverName || this._serverName) : this._serverName;
 
-		const converter = ('converter' in options) ? (options.converter || /*--*/ '' /*--*/) : 'AMIXmlToJson.xsl';
+		const converter = ('converter' in options) ? (options.converter || /*--*/ '' /*--*/) : this._converter;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -382,16 +386,16 @@ export default class AMIMQTTClient
 
 					if(error.length === 0)
 					{
-						this._L[token].resolve(json, info.join('. '));
+						this._L[token].resolve(json, info.join('. '), token);
 					}
 					else
 					{
-						this._L[token].reject(json, error.join('. '));
+						this._L[token].reject(json, error.join('. '), token);
 					}
 				}
 				else
 				{
-					this._L[token].resolve(data, token);
+					this._L[token].resolve(data, '', token);
 				}
 
 				delete this._L[token];
