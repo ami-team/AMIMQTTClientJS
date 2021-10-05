@@ -15,7 +15,7 @@
 				box-sizing: border-box;
 			}
 
-			input[type="text"], textarea {
+			input[type="text"], select, textarea {
 
 				border: 1px solid #CCC;
 				border-radius: 4px;
@@ -89,6 +89,20 @@
 			<!-- *************************************************************************************************** -->
 
 			<div style="margin-top: 10px;">
+				Converter:
+				<br />
+				<select type="text" id="AA93197B_6664_6DCD_1D1D_3B5E0BC926B2">
+					<option value="">Raw</option>
+					<option value="AMIXmlToCsv.xsl">CSV</option>
+					<option value="AMIXmlToJson.xsl">JSON</option>
+					<option value="AMIXmlToText.xsl">Text</option>
+					<option value="AMIXmlToXml.xsl">XML</option>
+				</select>
+			</div>
+
+			<!-- *************************************************************************************************** -->
+
+			<div style="margin-top: 10px;">
 
 				<button type="button" id="AC595B8F_6EB4_D12E_28BA_399E63F84D9C">Execute</button>
 
@@ -146,7 +160,11 @@
 
 			$('#AC595B8F_6EB4_D12E_28BA_399E63F84D9C').click(function() {
 
-				client.execute($('#CEC79BFA_4182_3783_0325_16BF28DE87FC').val()).done(function(data, token) {
+				client.execute(
+					$('#CEC79BFA_4182_3783_0325_16BF28DE87FC').val(), {
+						converter: $('#AA93197B_6664_6DCD_1D1D_3B5E0BC926B2').val(),
+					}
+				).done(function(data, token) {
 
 					$('#FF479735_8BD9_BCB8_A61A_27B0B934EB6F').val(data);
 

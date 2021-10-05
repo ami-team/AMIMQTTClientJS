@@ -61,7 +61,7 @@ export default class AMIMQTTClient
 
 	_cnt = 0x01;
 
-	_responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+)>(.*)');
+	_responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+),(true|false)>(.*)', 's');
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* METHODS                                                                                                        */
@@ -221,7 +221,7 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const topic = `ami/${this._serverName}/command/${options.converter || 'AMIXmlToJson.xsl'}`;
+		const topic = `ami/${this._serverName}/command/${'converter' in options ? options.converter || '': 'AMIXmlToJson.xsl'}`;
 
 		const message = new Paho.Message(`AMI-COMMAND<${token},"${this._user}","${this._uuid}">${command}`);
 
@@ -350,7 +350,9 @@ export default class AMIMQTTClient
 
 			const token = parseInt(m[1]);
 
-			const data = /*----*/(m[2]);
+			const json = /*----*/(m[2]);
+
+			const data = /*----*/(m[3]);
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
