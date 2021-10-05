@@ -4,9 +4,10 @@ const PACKAGE = require('./package.json');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const BANNER = `ami-mqtt-client ${PACKAGE.version}, AMI MQTT Client
+const BANNER = `ami-mqtt-client ${PACKAGE.version}, Eclipse Paho-based AMI MQTT Client
 https://gitlab.in2p3.fr/ami-team/amimqttclient/
-Copyright (c) 2021-${new Date().getFullYear()} Jérôme Odier`;
+Author Jérôme Odier (jerome.odier@lpsc.in2p3.fr)
+Copyright (c) 2021-${new Date().getFullYear()} CNRS/LPSC`;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
