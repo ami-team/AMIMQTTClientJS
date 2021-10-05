@@ -10,7 +10,8 @@
     "prompt"
   ],
   "dependencies": {
-    "paho-mqtt": "^1.1.0"
+    "paho-mqtt": "^1.1.0",
+    "jspath": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

@@ -2,6 +2,8 @@
 
 import Paho from 'paho-mqtt';
 
+import JSPath from 'jspath';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* JWT                                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -259,6 +261,13 @@ export default class AMIMQTTClient
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	jspath(path, json)
+	{
+		return JSPath.apply(path, json);
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
 	/* CALLBACKS                                                                                                      */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -358,7 +367,26 @@ export default class AMIMQTTClient
 
 			if(token in this._L)
 			{
-				this._L[token].resolve(data, token);
+				if(json === 'true')
+				{
+					const json = JSON.parse(data);
+
+					const info = JSPath.apply('.AMIMessage.info.$', json);
+					const error = JSPath.apply('.AMIMessage.error.$', json);
+
+					if(error.length === 0)
+					{
+						this._L[token].resolve(json, info.join('. '));
+					}
+					else
+					{
+						this._L[token].reject(json, error.join('. '));
+					}
+				}
+				else
+				{
+					this._L[token].resolve(data, token);
+				}
 
 				delete this._L[token];
 			}
