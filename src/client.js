@@ -223,7 +223,13 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const topic = `ami/${this._serverName}/command/${'converter' in options ? options.converter || '': 'AMIXmlToJson.xsl'}`;
+		const serverName = ('serverName' in options) ? (options.serverName || this._serverName) : this._serverName;
+
+		const converter = ('converter' in options) ? (options.converter || /*--*/ '' /*--*/) : 'AMIXmlToJson.xsl';
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		const topic = `ami/${serverName}/command/${converter}`;
 
 		const message = new Paho.Message(`AMI-COMMAND<${token},"${this._user}","${this._uuid}">${command}`);
 
@@ -361,7 +367,7 @@ export default class AMIMQTTClient
 
 			const json = /*----*/(m[2]);
 
-			const data = /*----*/(m[3]);
+			const data = /*---*/(m[3]);
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
