@@ -166,7 +166,7 @@
 					}
 				).done(function(data, token) {
 
-					$('#FF479735_8BD9_BCB8_A61A_27B0B934EB6F').val(data);
+					$('#FF479735_8BD9_BCB8_A61A_27B0B934EB6F').val(Object.prototype.toString.call(data) === '[object Object]' ? JSON.stringify(data) : data);
 
 				}).fail(function(message) {
 
