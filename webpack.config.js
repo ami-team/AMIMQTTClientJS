@@ -5,9 +5,14 @@ const PACKAGE = require('./package.json');
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const BANNER = `ami-mqtt-client ${PACKAGE.version}, Eclipse Paho-based AMI MQTT Client
-https://gitlab.in2p3.fr/ami-team/amimqttclient/
-Author Jérôme Odier (jerome.odier@lpsc.in2p3.fr)
-Copyright (c) 2021-${new Date().getFullYear()} CNRS/LPSC`;
+https://gitlab.in2p3.fr/ami-team/AMIMQTTClientJS
+Author: Jérôme ODIER (jerome.odier@lpsc.in2p3.fr)
+Copyright (c) 2021-${new Date().getFullYear()} CNRS/LPSC
+
+This file must be used under the terms of the CeCILL-C:
+http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
+http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
+`
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
