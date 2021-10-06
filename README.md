@@ -9,11 +9,11 @@
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="http://www.univ-grenoble-alpes.fr/" target="_blank">
-	<img src="http://ami.in2p3.fr/docs/images/logo_uga.png" alt="UGA" height="70" />
+	<img src="http://ami.in2p3.fr/docs/images/logo_uga.png" alt="UGA" height="72" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="http://home.cern/" target="_blank">
-	<img src="http://www.cern.ch/ami/images/logo_atlas.png" alt="CERN" height="80" />
+	<img src="http://www.cern.ch/ami/images/logo_atlas.png" alt="CERN" height="72" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="http://atlas.cern/" target="_blank">
