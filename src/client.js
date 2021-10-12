@@ -248,7 +248,7 @@ export default class AMIMQTTClient
 
 		const topic = `ami/${serverName}/command/${converter}`;
 
-		const message = new Paho.Message(`AMI-COMMAND<${token},"${this._uuid},"${this._username}"">${command}`);
+		const message = new Paho.Message(`AMI-COMMAND<${token},"${this._uuid}","${this._username}>${command}`);
 
 		message.token    = token;
 		message.topic    = topic;
