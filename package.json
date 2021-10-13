@@ -1,24 +1,32 @@
 {
-  "name": "ami-mqtt-client",
-  "description": "AMI MQTT Client",
-  "version": "1.0.0",
-  "author": "Jérôme Odier <jerome@odier.xyz>",
-  "keywords": [
-    "bootstrap",
-    "alert",
-    "confirm",
-    "prompt"
-  ],
-  "dependencies": {
-    "paho-mqtt": "^1.1.0",
-    "jspath": "^0.4.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
-    "babel-loader": "^8.2.2",
-    "webpack": "^5.56.1",
-    "webpack-cli": "^4.8.0"
-  },
-  "main": "index.js"
+	"name": "ami-mqtt-client",
+	"description": "AMI MQTT Client",
+	"author": "The AMI Team, Jerome Odier <jerome.odier@lpsc.in2p3.fr>",
+	"license": "CECILL-C",
+	"version": "1.0.0",
+	"main": "index.js",
+	"keywords": [
+		"AMI",
+		"AWF",
+		"ATLAS",
+		"Metadata",
+		"Interface",
+		"ATLAS Metadata Interface"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ami-team/AMIMQTTClientJS/"
+	},
+	"homepage": "https://github.com/ami-team/AMIMQTTClientJS/",
+	"dependencies": {
+		"paho-mqtt": "^1.1.0",
+		"jspath": "^0.4.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.15.5",
+		"@babel/preset-env": "^7.15.6",
+		"babel-loader": "^8.2.2",
+		"webpack": "^5.56.1",
+		"webpack-cli": "^4.8.0"
+	}
 }
