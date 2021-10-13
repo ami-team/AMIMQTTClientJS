@@ -8,7 +8,8 @@ const BANNER = `Copyright © 2021-${new Date().getFullYear()} CNRS/LPSC
 
 Author: Jérôme ODIER (jerome.odier@lpsc.in2p3.fr)
 
-Repository: https://gitlab.in2p3.fr/ami-team/AMIMQTTClientJS/
+Repositories: https://gitlab.in2p3.fr/ami-team/AMIMQTTClientJS/
+              https://www.github.com/ami-team/AMIMQTTClientJS/
 
 This software is a computer program whose purpose is to provide an
 Eclipse Paho-based MQTT Client to the ATLAS Metadata Interface (AMI)
