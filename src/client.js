@@ -304,15 +304,15 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onConnected(reconnect, uri)
+	_onConnected(reconnect, serverURL)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		if(reconnect) {
-			console.log(`onConnected: client \`${this._uuid}\` reconnected to server URI \`${uri}\``);
+			console.log(`onConnected: client \`${this._uuid}\` reconnected to server URL \`${serverURL}\``);
 		}
 		else {
-			console.log(`onConnected: client \`${this._uuid}\` connected to server URI \`${uri}\``);
+			console.log(`onConnected: client \`${this._uuid}\` connected to server URL \`${serverURL}\``);
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
@@ -321,7 +321,7 @@ export default class AMIMQTTClient
 
 			if(this._userOnConnected)
 			{
-				this._userOnConnected(reconnect, uri);
+				this._userOnConnected(reconnect, serverURL);
 			}
 
 		}).fail((errorCode, errorMessage) => {
