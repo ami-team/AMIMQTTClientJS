@@ -22,12 +22,12 @@
 	<img src="http://ami.in2p3.fr/docs/images/logo_cern.png" alt="CERN" height="72" />
 </a>
 
-AMIMQTTClient
-=============
+AMIMQTTClientJS
+===============
 
 
-Compiling AMIMQTTClient
-=======================
+Compiling AMIMQTTClientJS
+=========================
 
 * Requirements:
 
