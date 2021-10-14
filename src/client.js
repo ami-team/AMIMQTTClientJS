@@ -76,6 +76,8 @@ export default class AMIMQTTClient
 
 	_converter = 'AMIXmlToJson.xsl';
 
+	_paramRegExp = new RegExp('-\\W*([a-zA-Z][a-zA-Z0-9]*)\\W*=\\W*\\?', 'g');
+
 	_responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+),(true|false)>(.*)', 's');
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -251,11 +253,20 @@ export default class AMIMQTTClient
 
 		const token = this._cnt++;
 
+		const params = options.params || [];
+
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		const serverName = ('serverName' in options) ? (options.serverName || this._serverName) : this._serverName;
 
 		const converter = ('converter' in options) ? (options.converter || /*--*/ '' /*--*/) : this._converter;
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		command = (command || '').trim().replace(this._paramRegExp, (x, y) => {
+
+			return `-${y}="${String(params.shift()).replace('\\', '\\\\').replace('\n', '\\n').replace('"', '\\"').replace("'", "\\'")}"`;
+		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
