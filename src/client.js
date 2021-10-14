@@ -82,7 +82,7 @@ export default class AMIMQTTClient
 	/* METHODS                                                                                                        */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	constructor(useSSL, host, port, path, username, password, serverName, options)
+	constructor(endpoint, username, password, serverName, options)
 	{
 		serverName = serverName || '';
 
@@ -101,6 +101,8 @@ export default class AMIMQTTClient
 
 		this._uuid = uuid;
 
+		this._endpoint = endpoint;
+
 		this._username = username;
 
 		this._serverName = serverName;
@@ -116,7 +118,11 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._client = new Paho.Client(host, port, path, this._uuid);
+		const url = new URL(endpoint);
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		this._client = new Paho.Client(url.hostname, parseInt(url.port || '443'), url.pathname, uuid);
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -128,7 +134,7 @@ export default class AMIMQTTClient
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		this._client.connect({
-			useSSL: useSSL,
+			useSSL: url.protocol === 'wss:',
 			userName: username,
 			password: password,
 			reconnect: true,
@@ -142,16 +148,23 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	getUser()
+	getUUID()
 	{
-		return this._user;
+		return this._uuid;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	getUUID()
+	getEndpoint()
 	{
-		return this._uuid;
+		return this._endpoint;
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	getUsername()
+	{
+		return this._username;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
