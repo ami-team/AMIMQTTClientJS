@@ -58,7 +58,7 @@ function parseJwt(token)
 	{
 		return {};
 	}
-};
+}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* CLIENT                                                                                                             */
@@ -267,7 +267,7 @@ export default class AMIMQTTClient
 
 		command = (command || '').trim().replace(this._paramRegExp, (x, y) => {
 
-			return `-${y}="${String(params.shift()).replace('\\', '\\\\').replace('\n', '\\n').replace('"', '\\"').replace("'", "\\'")}"`;
+			return `-${y}="${String(params.shift()).replace('\\', '\\\\').replace('\n', '\\n').replace('"', '\\"').replace('\'', '\\\'')}"`;
 		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
@@ -372,7 +372,7 @@ export default class AMIMQTTClient
 
 		if(this._userOnFailure)
 		{
-			this._userOnFailure(errorCode, errorMessage);
+			this._userOnFailure(responseObject.errorCode, responseObject.errorMessage);
 		}
 	}
 
@@ -387,7 +387,7 @@ export default class AMIMQTTClient
 
 		if(this._userOnConnectionLost)
 		{
-			this._userOnConnectionLost(errorCode, errorMessage);
+			this._userOnConnectionLost(responseObject.errorCode, responseObject.errorMessage);
 		}
 	}
 
