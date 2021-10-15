@@ -72,15 +72,15 @@ export default class AMIMQTTClient
 	/* VARIABLES                                                                                                      */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_L = {};
+	#L = {};
 
-	_cnt = 0x01;
+	#cnt = 0x01;
 
-	_converter = 'AMIXmlToJson.xsl';
+	#converter = 'AMIXmlToJson.xsl';
 
-	_paramRegExp = new RegExp('-\\W*([a-zA-Z][a-zA-Z0-9]*)\\W*=\\W*\\?', 'g');
+	#paramRegExp = new RegExp('-\\W*([a-zA-Z][a-zA-Z0-9]*)\\W*=\\W*\\?', 'g');
 
-	_responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+),(true|false)>(.*)', 's');
+	#responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+),(true|false)>(.*)', 's');
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* METHODS                                                                                                        */
@@ -130,10 +130,10 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._client.onConnected        = (...args) => this._onConnected       .apply(this, args);
-		this._client.onConnectionLost   = (...args) => this._onConnectionLost  .apply(this, args);
-		this._client.onMessageArrived   = (...args) => this._onMessageArrived  .apply(this, args);
-		this._client.onMessageDelivered = (...args) => this._onMessageDelivered.apply(this, args);
+		this._client.onConnected        = (...args) => this.#onConnected       .apply(this, args);
+		this._client.onConnectionLost   = (...args) => this.#onConnectionLost  .apply(this, args);
+		this._client.onMessageArrived   = (...args) => this.#onMessageArrived  .apply(this, args);
+		this._client.onMessageDelivered = (...args) => this.#onMessageDelivered.apply(this, args);
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -143,8 +143,8 @@ export default class AMIMQTTClient
 			password: password,
 			reconnect: true,
 			/**/
-			onSuccess: (...args) => this._onSuccess.apply(this, args),
-			onFailure: (...args) => this._onFailure.apply(this, args),
+			onSuccess: (...args) => this.#onSuccess.apply(this, args),
+			onFailure: (...args) => this.#onFailure.apply(this, args),
 		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
@@ -223,7 +223,7 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const token = this._cnt++;
+		const token = this.#cnt++;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -253,7 +253,7 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const token = this._cnt++;
+		const token = this.#cnt++;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -263,11 +263,11 @@ export default class AMIMQTTClient
 
 		const serverName = ('serverName' in options) ? (options.serverName || this._serverName) : this._serverName;
 
-		const converter = ('converter' in options) ? (options.converter || /*--*/ '' /*--*/) : this._converter;
+		const converter = ('converter' in options) ? (options.converter || /*--*/ '' /*--*/) : this.#converter;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		command = (command || '').trim().replace(this._paramRegExp, (x, y) => {
+		command = (command || '').trim().replace(this.#paramRegExp, (x, y) => {
 
 			return `-${y}="${String(params.shift()).replace('\\', '\\\\').replace('\n', '\\n').replace('"', '\\"').replace('\'', '\\\'')}"`;
 		});
@@ -289,17 +289,17 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const result = this._L[token] = $.Deferred();
+		const result = this.#L[token] = $.Deferred();
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		setTimeout(() => {
 
-			if(token in this._L)
+			if(token in this.#L)
 			{
-				this._L[token].reject('timeout', token);
+				this.#L[token].reject('timeout', token);
 
-				delete this._L[token];
+				delete this.#L[token];
 			}
 
 		}, options.timeout || 10000);
@@ -322,7 +322,7 @@ export default class AMIMQTTClient
 	/* CALLBACKS                                                                                                      */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onSuccess()
+	#onSuccess()
 	{
 		if(this._userOnSuccess)
 		{
@@ -332,7 +332,7 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onConnected(reconnect, serverURL)
+	#onConnected(reconnect, serverURL)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -354,7 +354,7 @@ export default class AMIMQTTClient
 
 		}).fail((errorCode, errorMessage) => {
 
-			this._onFailure({
+			this.#onFailure({
 				errorCode: errorCode,
 				errorMessage: errorMessage,
 			});
@@ -365,7 +365,7 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onFailure(responseObject)
+	#onFailure(responseObject)
 	{
 		if(responseObject.errorCode !== 0)
 		{
@@ -380,7 +380,7 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onConnectionLost(responseObject)
+	#onConnectionLost(responseObject)
 	{
 		if(responseObject.errorCode !== 0)
 		{
@@ -395,12 +395,12 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onMessageArrived(message)
+	#onMessageArrived(message)
 	{
 		const topic = message.topic;
 		const payload = message.payloadString;
 
-		const m = payload.match(this._responseRegExp);
+		const m = payload.match(this.#responseRegExp);
 
 		if(topic === this._uuid && m)
 		{
@@ -416,7 +416,7 @@ export default class AMIMQTTClient
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
-			if(token in this._L)
+			if(token in this.#L)
 			{
 				if(json === 'true')
 				{
@@ -427,19 +427,19 @@ export default class AMIMQTTClient
 
 					if(error.length === 0)
 					{
-						this._L[token].resolve(json, info.join('. '), token);
+						this.#L[token].resolve(json, info.join('. '), token);
 					}
 					else
 					{
-						this._L[token].reject(json, error.join('. '), token);
+						this.#L[token].reject(json, error.join('. '), token);
 					}
 				}
 				else
 				{
-					this._L[token].resolve(data, '', token);
+					this.#L[token].resolve(data, '', token);
 				}
 
-				delete this._L[token];
+				delete this.#L[token];
 			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
@@ -461,7 +461,7 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	_onMessageDelivered(message)
+	#onMessageDelivered(message)
 	{
 		if(this._userOnMessageDelivered)
 		{
