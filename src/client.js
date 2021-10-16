@@ -138,7 +138,7 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	connect(password, serverName)
+	signInByToken(password, serverName)
 	{
 		const result = $.Deferred();
 
@@ -165,7 +165,7 @@ export default class AMIMQTTClient
 				reconnect: true,
 				/**/
 				onSuccess: () => { result.resolve(this._uuid); },
-				onFailure: (_, errorCode, errorMessage) => { result.reject(errorCode, errorMessage); },
+				onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
 			});
 
 			/*--------------------------------------------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	disconnect()
+	signOut()
 	{
 		const result = $.Deferred();
 
@@ -191,15 +191,17 @@ export default class AMIMQTTClient
 		try
 		{
 			this._client.disconnect();
+
+			result.resolve(this._uuid);
 		}
-		catch(e)
+		catch(errorMessage)
 		{
-			/* ignore */
+			result.resolve(errorMessage);
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		return result.promise().resolve();
+		return result.promise();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -238,7 +240,7 @@ export default class AMIMQTTClient
 				timeout: options.timeout || 10000,
 				/**/
 				onSuccess: () => { result.resolve(); },
-				onFailure: (_, errorCode, errorMessage) => { result.reject(errorCode, errorMessage); },
+				onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
 			}
 		);
 
@@ -260,7 +262,7 @@ export default class AMIMQTTClient
 				timeout: options.timeout || 10000,
 				/**/
 				onSuccess: () => { result.resolve(); },
-				onFailure: (_, errorCode, errorMessage) => { result.reject(errorCode, errorMessage); },
+				onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
 			}
 		);
 
@@ -409,7 +411,7 @@ export default class AMIMQTTClient
 
 		if(this._userOnConnectionLost)
 		{
-			this._userOnConnectionLost(responseObject.errorCode, responseObject.errorMessage);
+			this._userOnConnectionLost(responseObject.errorMessage);
 		}
 	}
 
