@@ -68,6 +68,7 @@ function parseJwt(token)
 
 /** Class representing AMI MQTT client
   */
+
 export default class AMIMQTTClient
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -92,7 +93,7 @@ export default class AMIMQTTClient
 	  * An AMI MQTT client
 	  * @param {String} endpoint the endpoint
 	  * @param {Object} [options] dictionary of optional parameters (onConnected, onConnectionLost, onMessageArrived, onMessageDelivered)
-	  * @returns {AMIMQTTClient} An AMI MQTT client
+	  * @returns {AMIMQTTClient} The AMI MQTT client
 	  */
 
 	constructor(endpoint, options)
@@ -479,11 +480,11 @@ export default class AMIMQTTClient
 		if(responseObject.errorCode !== 0)
 		{
 			console.log(`onConnectionLost: client \`${this._uuid}\` disconnected, cause: ${responseObject.errorMessage}`);
-		}
 
-		if(this._userOnConnectionLost)
-		{
-			this._userOnConnectionLost(responseObject.errorMessage);
+			if(this._userOnConnectionLost)
+			{
+				this._userOnConnectionLost(responseObject.errorMessage);
+			}
 		}
 	}
 
