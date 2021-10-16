@@ -86,17 +86,17 @@ export default class AMIMQTTClient
 	/* METHODS                                                                                                        */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	constructor(endpoint, username, password, serverName, options)
+	constructor(endpoint, options)
 	{
-		serverName = serverName || '';
-
 		options = options || {};
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const uuid = parseJwt(password).uuid || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+		const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 
-			const r = 16 * Math.random(), v = (c == 'x') ? (r | 0x000000000) : (r & 0x03 | 0x08);
+			const r = 16 * Math.random(), v = (c == 'x') ? (r | 0x000000000)
+			                                             : (r & 0x03 | 0x08)
+			;
 
 			return v.toString(16);
 		});
@@ -107,14 +107,8 @@ export default class AMIMQTTClient
 
 		this._endpoint = endpoint;
 
-		this._username = username;
-
-		this._serverName = serverName;
-
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._userOnSuccess          = options.onSuccess          || null;
-		this._userOnFailure          = options.onFailure          || null;
 		this._userOnConnected        = options.onConnected        || null;
 		this._userOnConnectionLost   = options.onConnectionLost   || null;
 		this._userOnMessageArrived   = options.onMessageArrived   || null;
@@ -123,6 +117,10 @@ export default class AMIMQTTClient
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		const url = new URL(endpoint);
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		this._useSSL = url.protocol === 'wss:';
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -136,18 +134,63 @@ export default class AMIMQTTClient
 		this._client.onMessageDelivered = (...args) => this.#onMessageDelivered.apply(this, args);
 
 		/*------------------------------------------------------------------------------------------------------------*/
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	connect(password, serverName)
+	{
+		const result = $.Deferred();
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		const username = parseJwt(password).sub || '';
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		this._username = username;
+
+		this._serverName = serverName;
+
+		/*------------------------------------------------------------------------------------------------------------*/
 
 		this._client.connect({
-			useSSL: url.protocol === 'wss:',
+			useSSL: this._useSSL,
 			userName: username,
 			password: password,
 			reconnect: true,
 			/**/
-			onSuccess: (...args) => this.#onSuccess.apply(this, args),
-			onFailure: (...args) => this.#onFailure.apply(this, args),
+			onSuccess: () => { result.resolve(this._uuid); },
+			onFailure: (_, errorCode, errorMessage) => { result.reject(errorCode, errorMessage); },
 		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
+
+		return result.promise();
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	disconnect()
+	{
+		const result = $.Deferred();
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		try
+		{
+			this._client.disconnect();
+
+			result.resolve();
+		}
+		catch(e)
+		{
+			result.reject();
+		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		return result.promise();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -322,16 +365,6 @@ export default class AMIMQTTClient
 	/* CALLBACKS                                                                                                      */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	#onSuccess()
-	{
-		if(this._userOnSuccess)
-		{
-			this._userOnSuccess(this._uuid);
-		}
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
 	#onConnected(reconnect, serverURL)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
@@ -345,37 +378,15 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this.subscribe(this._uuid).done(() => {
+		this.subscribe(this._uuid).always(() => {
 
 			if(this._userOnConnected)
 			{
 				this._userOnConnected(reconnect, serverURL);
 			}
-
-		}).fail((errorCode, errorMessage) => {
-
-			this.#onFailure({
-				errorCode: errorCode,
-				errorMessage: errorMessage,
-			});
 		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	#onFailure(responseObject)
-	{
-		if(responseObject.errorCode !== 0)
-		{
-			console.log(`onFailure: client \`${this._uuid}\` rejected, cause: ${responseObject.errorMessage}`);
-		}
-
-		if(this._userOnFailure)
-		{
-			this._userOnFailure(responseObject.errorCode, responseObject.errorMessage);
-		}
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
