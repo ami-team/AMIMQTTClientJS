@@ -66,6 +66,8 @@ function parseJwt(token)
 /* CLIENT                                                                                                             */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+/** Class representing AMI MQTT client
+  */
 export default class AMIMQTTClient
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -85,6 +87,13 @@ export default class AMIMQTTClient
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* METHODS                                                                                                        */
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	  * An AMI MQTT client
+	  * @param {String} endpoint the endpoint
+	  * @param {Object} [options] dictionary of optional parameters (onConnected, onConnectionLost, onMessageArrived, onMessageDelivered)
+	  * @returns {AMIMQTTClient} An AMI MQTT client
+	  */
 
 	constructor(endpoint, options)
 	{
@@ -138,6 +147,13 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	/**
+	  * Sign in by JWT token
+	  * @param {String} password the password
+	  * @param {String} serverName the server name
+	  * @returns {$.Deferred} A JQuery deferred object
+	  */
+
 	signInByToken(password, serverName)
 	{
 		const result = $.Deferred();
@@ -182,6 +198,11 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	/**
+	  * Sign out
+	  * @returns {$.Deferred} A JQuery deferred object
+	  */
+
 	signOut()
 	{
 		const result = $.Deferred();
@@ -206,12 +227,22 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	/**
+	  * Get the client UUID
+	  * @returns {String} The client UUID
+	  */
+
 	getUUID()
 	{
 		return this._uuid;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	  * Get the endpoint
+	  * @returns {String} The endpoint
+	  */
 
 	getEndpoint()
 	{
@@ -220,12 +251,24 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	/**
+	  * Get the username
+	  * @returns {String} The username
+	  */
+
 	getUsername()
 	{
 		return this._username;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	  * Subscribe a MQTT topic
+	  * @param {String} topic the topic
+	  * @param {Object} [options] dictionary of optional parameters (qos=0,1,2, timeout [ms])
+	  * @returns {$.Deferred} A JQuery deferred object
+	  */
 
 	subscribe(topic, options)
 	{
@@ -249,6 +292,13 @@ export default class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	/**
+	  * Unsubscribe a MQTT topic
+	  * @param {String} topic the topic
+	  * @param {Object} [options] dictionary of optional parameters (qos=0,1,2, timeout [ms])
+	  * @returns {$.Deferred} A JQuery deferred object
+	  */
+
 	unsubscribe(topic, options)
 	{
 		options = options || {};
@@ -270,6 +320,14 @@ export default class AMIMQTTClient
 	} 
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	  * Sends a MQTT message
+	  * @param {String} topic the topic
+	  * @param {String} payload the payload
+	  * @param {Object} [options] dictionary of optional parameters (qos=0,1,2, retained=true,false)
+	  * @returns {$.Deferred} A JQuery deferred object
+	  */
 
 	send(topic, payload, options)
 	{
@@ -300,6 +358,13 @@ export default class AMIMQTTClient
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	  * Executes an AMI command
+	  * @param {String} command the AMI command
+	  * @param {Object} [options] dictionary of optional parameters (serverName, converter, timeout [ms])
+	  * @returns {$.Deferred} A JQuery deferred object
+	  */
 
 	execute(command, options)
 	{
@@ -366,6 +431,13 @@ export default class AMIMQTTClient
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	  * Finds data within the given JSON, see {@link https://github.com/dfilatov/jspath}
+	  * @param {String} path the path
+	  * @param {Object} json the JSON
+	  * @returns {Array} The resulting array
+	  */
 
 	jspath(path, json)
 	{
