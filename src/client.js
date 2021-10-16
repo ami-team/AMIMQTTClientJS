@@ -144,25 +144,36 @@ export default class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const username = parseJwt(password).sub || '';
+		const username = parseJwt(password).sub;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._username = username;
+		if(username)
+		{
+			/*--------------------------------------------------------------------------------------------------------*/
 
-		this._serverName = serverName;
+			this._username = username;
 
-		/*------------------------------------------------------------------------------------------------------------*/
+			this._serverName = serverName;
 
-		this._client.connect({
-			useSSL: this._useSSL,
-			userName: username,
-			password: password,
-			reconnect: true,
-			/**/
-			onSuccess: () => { result.resolve(this._uuid); },
-			onFailure: (_, errorCode, errorMessage) => { result.reject(errorCode, errorMessage); },
-		});
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			this._client.connect({
+				useSSL: this._useSSL,
+				userName: username,
+				password: password,
+				reconnect: true,
+				/**/
+				onSuccess: () => { result.resolve(this._uuid); },
+				onFailure: (_, errorCode, errorMessage) => { result.reject(errorCode, errorMessage); },
+			});
+
+			/*--------------------------------------------------------------------------------------------------------*/
+		}
+		else
+		{
+			result.reject(999, 'invalid token');
+		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -180,17 +191,15 @@ export default class AMIMQTTClient
 		try
 		{
 			this._client.disconnect();
-
-			result.resolve();
 		}
 		catch(e)
 		{
-			result.reject();
+			/* ignore */
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		return result.promise();
+		return result.promise().resolve();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
