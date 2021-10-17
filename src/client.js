@@ -189,7 +189,7 @@ export default class AMIMQTTClient
 		}
 		else
 		{
-			result.reject(999, 'invalid token');
+			result.reject('invalid token');
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
