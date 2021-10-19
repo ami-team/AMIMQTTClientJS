@@ -3,7 +3,6 @@
 		"include": ["./src/client.js"]
 	},
 	"sourceType": "module",
-	"plugins": ["./node_modules/jsdoc-export-default-interop/dist/index"],
 	"opts": {
 		"encoding": "utf8",
 		"destination": "./doc/"

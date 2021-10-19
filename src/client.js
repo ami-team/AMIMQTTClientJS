@@ -69,7 +69,7 @@ function parseJwt(token)
 /** Class representing AMI MQTT client
   */
 
-export default class AMIMQTTClient
+class AMIMQTTClient
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* VARIABLES                                                                                                      */
@@ -104,8 +104,8 @@ export default class AMIMQTTClient
 
 		const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 
-			const r = 16 * Math.random(), v = (c == 'x') ? (r | 0x000000000)
-			                                             : (r & 0x03 | 0x08)
+			const r = 16 * Math.random(), v = (c === 'x') ? (r | 0x000000000)
+			                                              : (r & 0x03 | 0x08)
 			;
 
 			return v.toString(16);
@@ -289,7 +289,7 @@ export default class AMIMQTTClient
 		);
 
 		return result.promise();
-	} 
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -318,7 +318,7 @@ export default class AMIMQTTClient
 		);
 
 		return result.promise();
-	} 
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -572,5 +572,9 @@ export default class AMIMQTTClient
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 if(typeof window !== 'undefined') window.AMIMQTTClient = AMIMQTTClient;
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+export default AMIMQTTClient;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
