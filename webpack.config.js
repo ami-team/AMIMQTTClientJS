@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const PACKAGE = require('./package.json');
+//const PACKAGE = require('./package.json');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -15,10 +15,10 @@ This software is a computer program whose purpose is to provide an
 MQTT Client to the ATLAS Metadata Interface (AMI) ecosystem.
 
 This software is governed by the CeCILL-C license under French law and
-abiding by the rules of distribution of free software. You can use, 
+abiding by the rules of distribution of free software. You can use,
 modify and/or redistribute the software under the terms of the CeCILL-C
 license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+"http://www.cecill.info".
 
 The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
@@ -91,12 +91,15 @@ module.exports = {
 			/*--------------------------------------------------------------------------------------------------------*/
 		]
 	},
+	'externals': {
+		'$': 'JQuery'
+	},
 	'plugins': [
 		new JsDocPlugin({
-			conf: '.jsdocrc.json',
-			cwd: '.',
-			preserveTmpFile: false,
-			recursive: false
+			'conf': '.jsdocrc.json',
+			'cwd': '.',
+			'preserveTmpFile': false,
+			'recursive': false
 		}),
 		new ESLintPlugin({
 		}),

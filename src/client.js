@@ -13,7 +13,7 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import Paho from 'paho-mqtt';
+import { Client, Message } from 'paho-mqtt';
 
 import JSPath from 'jspath';
 
@@ -134,7 +134,7 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._client = new Paho.Client(url.hostname, parseInt(url.port || '443'), url.pathname, uuid);
+		this._client = new Client(url.hostname, parseInt(url.port || '443'), url.pathname, uuid);
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -340,7 +340,7 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const message = new Paho.Message(payload);
+		const message = new Message(payload);
 
 		message.token    = token;
 		message.topic    = topic;
@@ -396,7 +396,7 @@ class AMIMQTTClient
 
 		const topic = `ami/${serverName}/command/${converter}`;
 
-		const message = new Paho.Message(`AMI-COMMAND<${token},"${this._uuid}","${this._username}">${command}`);
+		const message = new Message(`AMI-COMMAND<${token},"${this._uuid}","${this._username}">${command}`);
 
 		message.token    = token;
 		message.topic    = topic;

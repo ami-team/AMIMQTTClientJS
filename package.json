@@ -5,6 +5,10 @@
 	"license": "CECILL-C",
 	"version": "1.0.0",
 	"main": "index.js",
+	"scripts": {
+		"build-dev": "webpack --mode development",
+		"build-prod": "webpack --mode production"
+	},
 	"keywords": [
 		"AMI",
 		"AWF",
@@ -20,7 +24,8 @@
 	"homepage": "https://github.com/ami-team/AMIMQTTClientJS/",
 	"dependencies": {
 		"paho-mqtt": "^1.1.0",
-		"jspath": "^0.4.0"
+		"jspath": "^0.4.0",
+		"jquery": "^3.5.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.15.5",
@@ -31,6 +36,7 @@
 		"eslint-webpack-plugin": "^3.0.1",
 		"jsdoc": "^3.6.7",
 		"jsdoc-webpack-plugin": "^0.3.0",
+		"terser-webpack-plugin": "^5.2.4",
 		"webpack": "^5.56.1",
 		"webpack-cli": "^4.8.0"
 	}
