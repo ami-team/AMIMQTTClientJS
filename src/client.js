@@ -72,7 +72,18 @@ function parseJwt(token)
 class AMIMQTTClient
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
-	/* VARIABLES                                                                                                      */
+	/* PUBLIC VARIABLES                                                                                               */
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	 * Library version
+	 * @type {String}
+	 */
+
+	version = '{{VERSION}}';
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+	/* PRIVATE VARIABLES                                                                                              */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	#L = {};
@@ -86,7 +97,7 @@ class AMIMQTTClient
 	#responseRegExp = new RegExp('AMI-RESPONSE<([0-9]+),(true|false)>(.*)', 's');
 
 	/*----------------------------------------------------------------------------------------------------------------*/
-	/* METHODS                                                                                                        */
+	/* PUBLIC METHODS                                                                                                 */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	/**
@@ -446,7 +457,7 @@ class AMIMQTTClient
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
-	/* CALLBACKS                                                                                                      */
+	/* PRIVATE METHODS                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	#onConnected(reconnect, serverURL)
@@ -492,12 +503,9 @@ class AMIMQTTClient
 
 	#onMessageArrived(message)
 	{
-		const topic = message.topic;
-		const payload = message.payloadString;
+		const m = message.payloadString.match(this.#responseRegExp);
 
-		const m = payload.match(this.#responseRegExp);
-
-		if(topic === this._uuid && m)
+		if(message.topic === this._uuid && m)
 		{
 			/*--------------------------------------------------------------------------------------------------------*/
 			/* AMI COMMAND RESULT MESSAGE                                                                             */
@@ -547,7 +555,7 @@ class AMIMQTTClient
 
 			if(this._userOnMessageArrived)
 			{
-				this._userOnMessageArrived(topic, payload);
+				this._userOnMessageArrived(message.topic, message.payloadString, message.qos, message.retained);
 			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
