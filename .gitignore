@@ -1,5 +1,8 @@
 .DS_Store
+.DS_Store?
+
 node_modules/
 package-lock.json
-/.idea/
-/AMIMQTTClientJS.iml
+
+.idea/
+AMIHTTPClientJS.iml
