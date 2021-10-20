@@ -4,7 +4,9 @@ const PACKAGE = require('./package.json');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const BANNER = `Copyright © 2021-${new Date().getFullYear()} CNRS/LPSC
+const BANNER = `AMI MQTT Client ${PACKAGE.version}
+
+Copyright © 2021-${new Date().getFullYear()} CNRS/LPSC
 
 Author: Jérôme ODIER (jerome.odier@lpsc.in2p3.fr)
 
