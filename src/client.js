@@ -166,7 +166,7 @@ class AMIMQTTClient
 	 * Sign in by JWT token
 	 * @param {string} password the password
 	 * @param {string} serverName the server name
-	 * @returns {$.Deferred} A JQuery deferred object
+	 * @returns {$.Promise} A JQuery promise object
 	 */
 
 	signInByToken(password, serverName)
@@ -215,7 +215,7 @@ class AMIMQTTClient
 
 	/**
 	 * Sign out
-	 * @returns {$.Deferred} A JQuery deferred object
+	 * @returns {$.Promise} A JQuery promise object
 	 */
 
 	signOut()
@@ -282,7 +282,7 @@ class AMIMQTTClient
 	 * Subscribe a MQTT topic
 	 * @param {string} topic the topic
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (qos=0,1,2, timeout [ms])
-	 * @returns {$.Deferred} A JQuery deferred object
+	 * @returns {$.Promise} A JQuery promise object
 	 */
 
 	subscribe(topic, options)
@@ -311,7 +311,7 @@ class AMIMQTTClient
 	 * Unsubscribe a MQTT topic
 	 * @param {string} topic the topic
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (qos=0,1,2, timeout [ms])
-	 * @returns {$.Deferred} A JQuery deferred object
+	 * @returns {$.Promise} A JQuery promise object
 	 */
 
 	unsubscribe(topic, options)
@@ -341,7 +341,7 @@ class AMIMQTTClient
 	 * @param {string} topic the topic
 	 * @param {string} payload the payload
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (qos=0,1,2, retained=true,false)
-	 * @returns {$.Deferred} A JQuery deferred object
+	 * @returns {$.Promise} A JQuery promise object
 	 */
 
 	send(topic, payload, options)
@@ -378,7 +378,7 @@ class AMIMQTTClient
 	 * Executes an AMI command
 	 * @param {string} command the AMI command
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (serverName, converter, timeout [ms])
-	 * @returns {$.Deferred} A JQuery deferred object
+	 * @returns {$.Promise} A JQuery promise object
 	 */
 
 	execute(command, options)
