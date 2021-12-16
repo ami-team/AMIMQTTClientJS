@@ -24,7 +24,7 @@ import JSPath from 'jspath';
 /**
  * Parse a JWT token
  * @param {string} token the JWT token
- * @returns {Object<string,string>} The the JWT token content
+ * @returns {Object<string,string>} The JWT token content
  */
 
 function parseJwt(token)
