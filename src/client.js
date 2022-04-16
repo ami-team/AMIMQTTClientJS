@@ -403,7 +403,11 @@ class AMIMQTTClient
 
 		command = (command || '').trim().replace(this.#paramRegExp, (x, y) => {
 
-			return `-${y}="${String(params.shift()).replace('\\', '\\\\').replace('\n', '\\n').replace('"', '\\"').replace('\'', '\\\'')}"`;
+			const rawValue = params.shift();
+
+			return Object.prototype.toString.call(rawValue) === '[object String]' ? `-${y}=${JSON.stringify(rawValue)}`
+			                                                                      : `-${y}="${JSON.stringify(rawValue)}"`
+			;
 		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
