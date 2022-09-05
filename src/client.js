@@ -164,20 +164,48 @@ class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	setOnConnected(_userOnConnected) {
-		this._userOnConnected = _userOnConnected;
+	/**
+	 * Set the 'onConnected' handler
+	 * @param {function} onConnected the new 'onConnected' handler
+	 * @returns {AMIMQTTClient} This AMI MQTT client
+	 */
+
+	setOnConnected(onConnected) {
+		this._userOnConnected = onConnected;
+		return this;
 	}
 
-	setOnConnectionLost(_userOnConnectionLost) {
-		this._userOnConnectionLost = _userOnConnectionLost;
+	/**
+	 * Set the 'onConnectionLost' handler
+	 * @param {function} onConnectionLost the new 'onConnectionLost' handler
+	 * @returns {AMIMQTTClient} This AMI MQTT client
+	 */
+
+	setOnConnectionLost(onConnectionLost) {
+		this._userOnConnectionLost = onConnectionLost;
+		return this;
 	}
 
-	setOnMessageArrived(_userOnMessageArrived) {
-		this._userOnMessageArrived = _userOnMessageArrived;
+	/**
+	 * Set the 'onMessageArrived' handler
+	 * @param {function} onMessageArrived the new 'onMessageArrived' handler
+	 * @returns {AMIMQTTClient} This AMI MQTT client
+	 */
+
+	setOnMessageArrived(onMessageArrived) {
+		this._userOnMessageArrived = onMessageArrived;
+		return this;
 	}
 
-	setOnMessageDelivered(_userOnMessageDelivered) {
-		this._userOnMessageDelivered = _userOnMessageDelivered;
+	/**
+	 * Set the 'onMessageDelivered' handler
+	 * @param {function} onMessageDelivered the new 'onMessageDelivered' handler
+	 * @returns {AMIMQTTClient} This AMI MQTT client
+	 */
+
+	setOnMessageDelivered(onMessageDelivered) {
+		this._userOnMessageDelivered = onMessageDelivered;
+		return this;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
