@@ -154,8 +154,8 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._client.onConnected        = (...args) => { this.#connected = true ; return this.#onConnected       .apply(this, args); };
-		this._client.onConnectionLost   = (...args) => { this.#connected = false; return this.#onConnectionLost  .apply(this, args); };
+		this._client.onConnected        = (...args) => this.#onConnected       .apply(this, args);
+		this._client.onConnectionLost   = (...args) => this.#onConnectionLost  .apply(this, args);
 		this._client.onMessageArrived   = (...args) => this.#onMessageArrived  .apply(this, args);
 		this._client.onMessageDelivered = (...args) => this.#onMessageDelivered.apply(this, args);
 
@@ -485,6 +485,10 @@ class AMIMQTTClient
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
+		this.#connected = true;
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
 		if(reconnect) {
 			console.log(`onConnected: client \`${this._uuid}\` reconnected to server URL \`${serverURL}\``);
 		}
@@ -498,7 +502,7 @@ class AMIMQTTClient
 
 			if(this._userOnConnected)
 			{
-				this._userOnConnected(reconnect, serverURL);
+				this._userOnConnected(this, reconnect, serverURL);
 			}
 		});
 
@@ -509,15 +513,23 @@ class AMIMQTTClient
 
 	#onConnectionLost(responseObject)
 	{
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		this.#connected = false;
+
+		/*------------------------------------------------------------------------------------------------------------*/
+
 		if(responseObject.errorCode !== 0)
 		{
 			console.log(`onConnectionLost: client \`${this._uuid}\` disconnected, cause: ${responseObject.errorMessage}`);
 
 			if(this._userOnConnectionLost)
 			{
-				this._userOnConnectionLost(responseObject.errorMessage);
+				this._userOnConnectionLost(this, responseObject.errorMessage);
 			}
 		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -576,7 +588,7 @@ class AMIMQTTClient
 
 			if(this._userOnMessageArrived)
 			{
-				this._userOnMessageArrived(message.topic, message.payloadString, message.qos, message.retained);
+				this._userOnMessageArrived(this, message.topic, message.payloadString, message.qos, message.retained);
 			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
@@ -589,7 +601,7 @@ class AMIMQTTClient
 	{
 		if(this._userOnMessageDelivered)
 		{
-			this._userOnMessageDelivered(message.token);
+			this._userOnMessageDelivered(this, message.token);
 		}
 	}
 
