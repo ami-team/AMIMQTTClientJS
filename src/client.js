@@ -93,6 +93,8 @@ class AMIMQTTClient
 
 	#cnt = 0x01;
 
+	#connected = false;
+
 	#converter = 'AMIXmlToJson.xsl';
 
 	#paramRegExp = new RegExp('-\\W*([a-zA-Z][a-zA-Z0-9]*)\\W*=\\W*\\?', 'g');
@@ -152,8 +154,8 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._client.onConnected        = (...args) => this.#onConnected       .apply(this, args);
-		this._client.onConnectionLost   = (...args) => this.#onConnectionLost  .apply(this, args);
+		this._client.onConnected        = (...args) => { this.#connected = true ; return this.#onConnected       .apply(this, args); };
+		this._client.onConnectionLost   = (...args) => { this.#connected = false; return this.#onConnectionLost  .apply(this, args); };
 		this._client.onMessageArrived   = (...args) => this.#onMessageArrived  .apply(this, args);
 		this._client.onMessageDelivered = (...args) => this.#onMessageDelivered.apply(this, args);
 
@@ -238,6 +240,18 @@ class AMIMQTTClient
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		return result.promise();
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	 * Check weather the client is connected
+	 * @returns {boolean} The client connection status
+	 */
+
+	isConnected()
+	{
+		return this.#connected;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
