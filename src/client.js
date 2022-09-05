@@ -164,6 +164,24 @@ class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	setOnConnected(_userOnConnected) {
+		this._userOnConnected = _userOnConnected;
+	}
+
+	setOnConnectionLost(_userOnConnectionLost) {
+		this._userOnConnectionLost = _userOnConnectionLost;
+	}
+
+	setOnMessageArrived(_userOnMessageArrived) {
+		this._userOnMessageArrived = _userOnMessageArrived;
+	}
+
+	setOnMessageDelivered(_userOnMessageDelivered) {
+		this._userOnMessageDelivered = _userOnMessageDelivered;
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
 	/**
 	 * Sign in by JWT token
 	 * @param {string} password the password
