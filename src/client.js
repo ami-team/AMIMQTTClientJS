@@ -108,7 +108,7 @@ class AMIMQTTClient
 	/**
 	 * An AMI MQTT client
 	 * @param {string} endpoint the endpoint
-	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (onConnected, onConnectionLost, onMessageArrived, onMessageDelivered)
+	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (detectTopic, onConnected, onConnectionLost, onMessageArrived, onMessageDelivered)
 	 * @returns {AMIMQTTClient} The AMI MQTT client
 	 */
 
@@ -132,6 +132,8 @@ class AMIMQTTClient
 		this._uuid = uuid;
 
 		this._endpoint = endpoint;
+
+		this._detectTopic = options.detectTopic;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -241,15 +243,22 @@ class AMIMQTTClient
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
-			this._client.connect({
-				useSSL: this._useSSL,
-				userName: username,
-				password: password,
-				reconnect: true,
-				/**/
-				onSuccess: () => { result.resolve(this._uuid); },
-				onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
-			});
+			if(this._serverName || this._detectTopic)
+			{
+				this._client.connect({
+					useSSL: this._useSSL,
+					userName: username,
+					password: password,
+					reconnect: true,
+					/**/
+					onSuccess: () => { result.resolve(this._uuid); },
+					onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
+				});
+			}
+			else
+			{
+				result.reject('detectTopic is null');
+			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
 		}
@@ -331,20 +340,8 @@ class AMIMQTTClient
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	/**
-	 * Get the username
-	 * @returns {string} The username
-	 */
-
-	getUsername()
-	{
-		return this._username;
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	/**
-	 * Get the default server name
-	 * @returns {string} The default server name
+	 * Get the server name
+	 * @returns {string} The server name
 	 */
 
 	getServerName()
@@ -355,13 +352,13 @@ class AMIMQTTClient
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	/**
-	 * Set the default server name
-	 * @param {string} serverName The default server name
+	 * Get the username
+	 * @returns {string} The username
 	 */
 
-	setServerName(serverName)
+	getUsername()
 	{
-		this._serverName = serverName;
+		return this._username;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -555,7 +552,7 @@ class AMIMQTTClient
 	/* PRIVATE METHODS                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	#onConnected(reconnect, serverURL)
+	#onConnected(reconnect, endpoint)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -564,19 +561,26 @@ class AMIMQTTClient
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		if(reconnect) {
-			console.log(`onConnected: client \`${this._uuid}\` reconnected to server URL \`${serverURL}\``);
+			console.log(`onConnected: client \`${this._uuid}\` reconnected to server URL \`${this._endpoint}\``);
 		}
 		else {
-			console.log(`onConnected: client \`${this._uuid}\` connected to server URL \`${serverURL}\``);
+			console.log(`onConnected: client \`${this._uuid}\` connected to server URL \`${this._endpoint}\``);
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		this.subscribe(this._uuid).always(() => {
 
-			if(this._userOnConnected)
+			if(!this._serverName)
 			{
-				this._userOnConnected(this, reconnect, serverURL);
+				this.subscribe(this._detectTopic);
+			}
+			else
+			{
+				if(this._userOnConnected)
+				{
+					this._userOnConnected(this, reconnect, endpoint);
+				}
 			}
 		});
 
@@ -612,7 +616,33 @@ class AMIMQTTClient
 	{
 		const m = message.payloadString.match(this.#responseRegExp);
 
-		if(message.topic === this._uuid && m)
+		/**/ if(message.topic === this._detectTopic && !this._serverName)
+		{
+			/*--------------------------------------------------------------------------------------------------------*/
+			/* AMI SERVER DETECTION MESSAGE                                                                           */
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			const json = JSON.parse(message.payloadString);
+
+			if(json['server_name'])
+			{
+				/*------------------------------------------------------------------------------------------------*/
+
+				this._serverName = json['server_name'];
+
+				/*------------------------------------------------------------------------------------------------*/
+
+				if(this._userOnConnected)
+				{
+					this._userOnConnected(this, false, this._endpoint);
+				}
+
+				/*------------------------------------------------------------------------------------------------*/
+			}
+
+			/*--------------------------------------------------------------------------------------------------------*/
+		}
+		else if(message.topic === this._uuid && m)
 		{
 			/*--------------------------------------------------------------------------------------------------------*/
 			/* AMI COMMAND RESULT MESSAGE                                                                             */

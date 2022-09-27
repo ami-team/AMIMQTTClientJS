@@ -6,8 +6,8 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"build-dev": "webpack --mode development",
-		"build-prod": "webpack --mode production"
+		"build-dev": "./node_modules/webpack/bin/webpack.js --mode development",
+		"build-prod": "./node_modules/webpack/bin/webpack.js --mode production"
 	},
 	"keywords": [
 		"AMI",
