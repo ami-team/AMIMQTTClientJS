@@ -108,7 +108,7 @@ class AMIMQTTClient
 	/**
 	 * An AMI MQTT client
 	 * @param {string} endpoint the endpoint
-	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (detectTopic, onConnected, onConnectionLost, onMessageArrived, onMessageDelivered)
+	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (discoveryTopic, triggerDiscoveryTopic, onConnected, onConnectionLost, onMessageArrived, onMessageDelivered)
 	 * @returns {AMIMQTTClient} The AMI MQTT client
 	 */
 
@@ -133,7 +133,8 @@ class AMIMQTTClient
 
 		this._endpoint = endpoint;
 
-		this._detectTopic = options.detectTopic;
+		this._discoveryTopic = options.discoveryTopic;
+		this._triggerDiscoveryTopic = options.triggerDiscoveryTopic;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -239,7 +240,7 @@ class AMIMQTTClient
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
-			if(this._serverName || this._detectTopic)
+			if(this._serverName || this._discoveryTopic)
 			{
 				this._client.connect({
 					useSSL: this._useSSL,
@@ -253,7 +254,7 @@ class AMIMQTTClient
 			}
 			else
 			{
-				result.reject('detectTopic is null');
+				result.reject('option `discoverTopic` is null');
 			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
@@ -569,7 +570,15 @@ class AMIMQTTClient
 
 			if(!this._serverName)
 			{
-				this.subscribe(this._detectTopic);
+				if(this._discoveryTopic)
+				{
+					this.subscribe(this._discoveryTopic);
+				}
+
+				if(this._triggerDiscoveryTopic)
+				{
+					this.send(this._triggerDiscoveryTopic, '{}');
+				}
 			}
 			else
 			{
@@ -612,7 +621,7 @@ class AMIMQTTClient
 	{
 		const m = message.payloadString.match(this.#responseRegExp);
 
-		/**/ if(message.topic === this._detectTopic && !this._serverName)
+		/**/ if(message.topic === this._discoveryTopic && !this._serverName)
 		{
 			/*--------------------------------------------------------------------------------------------------------*/
 			/* AMI SERVER DETECTION MESSAGE                                                                           */
