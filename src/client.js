@@ -254,7 +254,7 @@ class AMIMQTTClient
 			}
 			else
 			{
-				result.reject('option `discoverTopic` is null');
+				result.reject('option `discoveryTopic` is null');
 			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
