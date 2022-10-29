@@ -578,13 +578,6 @@ class AMIMQTTClient
 						{
 							this.send(this._triggerDiscoveryTopic, '{}');
 						}
-
-					}).fail(() => {
-
-						if(this._userOnConnected)
-						{
-							this._userOnConnected(this, reconnect, endpoint);
-						}
 					});
 				}
 			}
