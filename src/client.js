@@ -572,12 +572,16 @@ class AMIMQTTClient
 			{
 				if(this._discoveryTopic)
 				{
-					this.subscribe(this._discoveryTopic);
-				}
+					this.subscribe(this._discoveryTopic).done(() => {
 
-				if(this._triggerDiscoveryTopic)
-				{
-					this.send(this._triggerDiscoveryTopic, '{}');
+						if(this._triggerDiscoveryTopic)
+						{
+							this.send(this._triggerDiscoveryTopic, '{}').done(() => {
+
+								console.log('fast discovery mode');
+							});
+						}
+					});
 				}
 			}
 			else
