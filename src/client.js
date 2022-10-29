@@ -449,7 +449,7 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		return $.Deferred().resolve(token).promise();
+		return token;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 	}
@@ -576,10 +576,14 @@ class AMIMQTTClient
 
 						if(this._triggerDiscoveryTopic)
 						{
-							this.send(this._triggerDiscoveryTopic, '{}').done(() => {
+							this.send(this._triggerDiscoveryTopic, '{}');
+						}
 
-								console.log('fast discovery mode');
-							});
+					}).fail(() => {
+
+						if(this._userOnConnected)
+						{
+							this._userOnConnected(this, reconnect, endpoint);
 						}
 					});
 				}
