@@ -666,18 +666,25 @@ class AMIMQTTClient // noinspection JSUnusedGlobalSymbols
 			{
 				if(json === 'true')
 				{
-					const json = JSON.parse(data);
-
-					const info = JSPath.apply('.AMIMessage.info.$', json);
-					const error = JSPath.apply('.AMIMessage.error.$', json);
-
-					if(error.length === 0)
+					try
 					{
-						this.#L[token].resolve(json, info.join('. '), token);
+						const json = JSON.parse(data);
+
+						const info = JSPath.apply('.AMIMessage.info.$', json);
+						const error = JSPath.apply('.AMIMessage.error.$', json);
+
+						if(error.length === 0)
+						{
+							this.#L[token].resolve(json, info.join('. '), token);
+						}
+						else
+						{
+							this.#L[token].reject(json, error.join('. '), token);
+						}
 					}
-					else
+					catch(e)
 					{
-						this.#L[token].reject(json, error.join('. '), token);
+						this.#L[token].reject({}, 'invalid JSON', token);
 					}
 				}
 				else
