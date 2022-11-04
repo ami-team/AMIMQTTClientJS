@@ -452,6 +452,22 @@ class AMIMQTTClient
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	static #response(data, message, urlWithParameters, jsonError)
+	{
+		if(jsonError)
+		{
+			data = {'AMIMessage': [{'error': [{'$': data}]}]};
+		}
+
+		return {
+			data: data,
+			message: message,
+			urlWithParameters: urlWithParameters,
+		};
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
 	/**
 	 * Executes an AMI command
 	 * @param {string} command the AMI command
@@ -520,7 +536,7 @@ class AMIMQTTClient
 
 				if(token in this.#L)
 				{
-					reject('timeout', token);
+					reject(AMIMQTTClient.#response('timeout', 'timeout', token, converter === 'AMIXmlToJson.xsl'));
 
 					delete this.#L[token];
 				}
@@ -677,21 +693,21 @@ class AMIMQTTClient
 
 						if(error.length === 0)
 						{
-							this.#L[token].resolve(json, info.join('. '), token);
+							this.#L[token].resolve(AMIMQTTClient.#response(json, info.join('. '), token, false));
 						}
 						else
 						{
-							this.#L[token].reject(json, error.join('. '), token);
+							this.#L[token].reject(AMIMQTTClient.#response(json, error.join('. '), token, true));
 						}
 					}
 					catch(e)
 					{
-						this.#L[token].reject({}, 'invalid JSON', token);
+						this.#L[token].reject(AMIMQTTClient.#response('invalid JSON', 'invalid JSON', token, true));
 					}
 				}
 				else
 				{
-					this.#L[token].resolve(data, '', token);
+					this.#L[token].resolve(AMIMQTTClient.#response(data, '', token, false));
 				}
 
 				delete this.#L[token];
