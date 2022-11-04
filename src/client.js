@@ -673,16 +673,16 @@ class AMIMQTTClient // noinspection JSUnusedGlobalSymbols
 
 					if(error.length === 0)
 					{
-						this.#L.resolve[token](json, info.join('. '), token);
+						this.#L[token].resolve(json, info.join('. '), token);
 					}
 					else
 					{
-						this.#L.reject[token](json, error.join('. '), token);
+						this.#L[token].reject(json, error.join('. '), token);
 					}
 				}
 				else
 				{
-					this.#L.resolve[token](data, '', token);
+					this.#L[token].resolve(data, '', token);
 				}
 
 				delete this.#L[token];
