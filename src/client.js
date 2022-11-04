@@ -68,11 +68,13 @@ function parseJwt(token)
 /* CLIENT                                                                                                             */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+// noinspection JSUnusedGlobalSymbols
+
 /**
  * Class representing an AMI MQTT client
  */
 
-class AMIMQTTClient // noinspection JSUnusedGlobalSymbols
+class AMIMQTTClient
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* PUBLIC VARIABLES                                                                                               */
