@@ -72,7 +72,7 @@ function parseJwt(token)
  * Class representing an AMI MQTT client
  */
 
-class AMIMQTTClient
+class AMIMQTTClient // noinspection JSUnusedGlobalSymbols
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* PUBLIC VARIABLES                                                                                               */
@@ -217,85 +217,81 @@ class AMIMQTTClient
 	 * Sign in by JWT token
 	 * @param {string} password the password
 	 * @param {string} serverName the server name
-	 * @returns {$.Promise} A JQuery promise object
+	 * @returns {Promise} A JavaScript promise object
 	 */
 
 	signInByToken(password, serverName)
 	{
-		const result = $.Deferred();
-
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		const username = parseJwt(password).sub;
-
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		if(username)
-		{
-			/*--------------------------------------------------------------------------------------------------------*/
-
-			this._username = username;
-
-			this._serverName = serverName;
+		return new Promise((resolve, reject) => {
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
-			if(this._serverName || this._discoveryTopic)
+			const username = parseJwt(password).sub;
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			if(username)
 			{
-				this._client.connect({
-					useSSL: this._useSSL,
-					userName: username,
-					password: password,
-					reconnect: true,
-					/**/
-					onSuccess: () => { result.resolve(this._uuid); },
-					onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
-				});
+				/*----------------------------------------------------------------------------------------------------*/
+
+				this._username = username;
+
+				this._serverName = serverName;
+
+				/*----------------------------------------------------------------------------------------------------*/
+
+				if(this._serverName || this._discoveryTopic)
+				{
+					this._client.connect({
+						useSSL: this._useSSL,
+						userName: username,
+						password: password,
+						reconnect: true,
+						/**/
+						onSuccess: () => { resolve(this._uuid); },
+						onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+					});
+				}
+				else
+				{
+					reject('option `discoveryTopic` is null');
+				}
+
+				/*----------------------------------------------------------------------------------------------------*/
 			}
 			else
 			{
-				result.reject('option `discoveryTopic` is null');
+				reject('invalid token');
 			}
-
-			/*--------------------------------------------------------------------------------------------------------*/
-		}
-		else
-		{
-			result.reject('invalid token');
-		}
-
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		return result.promise();
+		});
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	/**
 	 * Sign out
-	 * @returns {$.Promise} A JQuery promise object
+	 * @returns {Promise} A JavaScript promise object
 	 */
 
 	signOut()
 	{
-		const result = $.Deferred();
+		return new Promise((resolve, reject) => {
 
-		/*------------------------------------------------------------------------------------------------------------*/
+			/*------------------------------------------------------------------------------------------------------------*/
 
-		try
-		{
-			this._client.disconnect();
+			try
+			{
+				this._client.disconnect();
 
-			result.resolve(this._uuid);
-		}
-		catch(errorMessage)
-		{
-			result.resolve(errorMessage);
-		}
+				resolve(this._uuid);
+			}
+			catch(errorMessage)
+			{
+				reject(errorMessage);
+			}
 
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		return result.promise();
+			/*------------------------------------------------------------------------------------------------------------*/
+		});
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -364,27 +360,26 @@ class AMIMQTTClient
 	 * Subscribe a MQTT topic
 	 * @param {string} topic the topic
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (qos=0,1,2, timeout [ms])
-	 * @returns {$.Promise} A JQuery promise object
+	 * @returns {Promise} A JavaScript promise object
 	 */
 
 	subscribe(topic, options)
 	{
 		options = options || {};
 
-		const result = $.Deferred();
+		return new Promise((resolve, reject) => {
 
-		this._client.subscribe(
-			topic,
-			{
-				qos: options.qos || 0,
-				timeout: options.timeout || 10000,
-				/**/
-				onSuccess: () => { result.resolve(); },
-				onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
-			}
-		);
-
-		return result.promise();
+			this._client.subscribe(
+				topic,
+				{
+					qos: options.qos || 0,
+					timeout: options.timeout || 10000,
+					/**/
+					onSuccess: () => { resolve(); },
+					onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+				}
+			);
+		});
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -393,27 +388,26 @@ class AMIMQTTClient
 	 * Unsubscribe a MQTT topic
 	 * @param {string} topic the topic
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (qos=0,1,2, timeout [ms])
-	 * @returns {$.Promise} A JQuery promise object
+	 * @returns {Promise} A JavaScript promise object
 	 */
 
 	unsubscribe(topic, options)
 	{
 		options = options || {};
 
-		const result = $.Deferred();
+		return new Promise((resolve, reject) => {
 
-		this._client.unsubscribe(
-			topic,
-			{
-				qos: options.qos || 0,
-				timeout: options.timeout || 10000,
-				/**/
-				onSuccess: () => { result.resolve(); },
-				onFailure: (x, y, errorMessage) => { result.reject(errorMessage); },
-			}
-		);
-
-		return result.promise();
+			this._client.unsubscribe(
+				topic,
+				{
+					qos: options.qos || 0,
+					timeout: options.timeout || 10000,
+					/**/
+					onSuccess: () => { resolve(); },
+					onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+				}
+			);
+		});
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -423,7 +417,7 @@ class AMIMQTTClient
 	 * @param {string} topic the topic
 	 * @param {string} payload the payload
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (qos=0,1,2, retained=true,false)
-	 * @returns {$.Promise} A JQuery promise object
+	 * @returns {Number} The MQTT message token
 	 */
 
 	send(topic, payload, options)
@@ -460,7 +454,7 @@ class AMIMQTTClient
 	 * Executes an AMI command
 	 * @param {string} command the AMI command
 	 * @param {Object<string,*>} [options={}] dictionary of optional parameters (serverName, converter, timeout [ms])
-	 * @returns {$.Promise} A JQuery promise object
+	 * @returns {Promise} A JavaScript promise object
 	 */
 
 	execute(command, options)
@@ -509,24 +503,27 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		const result = this.#L[token] = $.Deferred();
+		return new Promise((resolve, reject) => {
 
-		/*------------------------------------------------------------------------------------------------------------*/
+			/*--------------------------------------------------------------------------------------------------------*/
 
-		setTimeout(() => {
+			this.#L[token] = resolve;
 
-			if(token in this.#L)
-			{
-				this.#L[token].reject('timeout', token);
+			/*--------------------------------------------------------------------------------------------------------*/
 
-				delete this.#L[token];
-			}
+			setTimeout(() => {
 
-		}, options.timeout || 10000);
+				if(token in this.#L)
+				{
+					reject('timeout', token);
 
-		/*------------------------------------------------------------------------------------------------------------*/
+					delete this.#L[token];
+				}
 
-		return result.promise();
+			}, options.timeout || 10000);
+
+			/*--------------------------------------------------------------------------------------------------------*/
+		});
 
 		/*------------------------------------------------------------------------------------------------------------*/
 	}
@@ -566,13 +563,13 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this.subscribe(this._uuid).always(() => {
+		this.subscribe(this._uuid).finally(() => {
 
 			if(!this._serverName)
 			{
 				if(this._discoveryTopic)
 				{
-					this.subscribe(this._discoveryTopic).done(() => {
+					this.subscribe(this._discoveryTopic).then(() => {
 
 						if(this._triggerDiscoveryTopic)
 						{
@@ -673,16 +670,16 @@ class AMIMQTTClient
 
 					if(error.length === 0)
 					{
-						this.#L[token].resolve(json, info.join('. '), token);
+						this.#L[token](json, info.join('. '), token);
 					}
 					else
 					{
-						this.#L[token].reject(json, error.join('. '), token);
+						this.#L[token](json, error.join('. '), token);
 					}
 				}
 				else
 				{
-					this.#L[token].resolve(data, '', token);
+					this.#L[token](data, '', token);
 				}
 
 				delete this.#L[token];

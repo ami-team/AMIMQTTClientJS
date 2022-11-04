@@ -16,10 +16,6 @@
 		"es6": true
 	},
 
-	"globals": {
-		"$": false
-	},
-
 	"rules": {
 		"no-mixed-spaces-and-tabs": 0,
 
