@@ -256,9 +256,9 @@ class AMIMQTTClient
 							onFailure: (x, y, errorMessage) => { reject(errorMessage); },
 						});
 					}
-					catch(e)
+					catch(errorMessage)
 					{
-						reject(`error connecting to MQTT broker: ${e}`);
+						reject(`error connecting to MQTT broker: ${errorMessage}`);
 					}
 				}
 				else
@@ -378,16 +378,23 @@ class AMIMQTTClient
 
 		return new Promise((resolve, reject) => {
 
-			this._client.subscribe(
-				topic,
-				{
-					qos: options.qos || 0,
-					timeout: options.timeout || 10000,
-					/**/
-					onSuccess: () => { resolve(); },
-					onFailure: (x, y, errorMessage) => { reject(errorMessage); },
-				}
-			);
+			try
+			{
+				this._client.subscribe(
+					topic,
+					{
+						qos: options.qos || 0,
+						timeout: options.timeout || 10000,
+						/**/
+						onSuccess: () => { resolve(); },
+						onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+					}
+				);
+			}
+			catch(errorMessage)
+			{
+				reject(errorMessage);
+			}
 		});
 	}
 
@@ -406,16 +413,23 @@ class AMIMQTTClient
 
 		return new Promise((resolve, reject) => {
 
-			this._client.unsubscribe(
-				topic,
-				{
-					qos: options.qos || 0,
-					timeout: options.timeout || 10000,
-					/**/
-					onSuccess: () => { resolve(); },
-					onFailure: (x, y, errorMessage) => { reject(errorMessage); },
-				}
-			);
+			try
+			{
+				this._client.unsubscribe(
+					topic,
+					{
+						qos: options.qos || 0,
+						timeout: options.timeout || 10000,
+						/**/
+						onSuccess: () => { resolve(); },
+						onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+					}
+				);
+			}
+			catch(errorMessage)
+			{
+				reject(errorMessage);
+			}
 		});
 	}
 
@@ -524,11 +538,18 @@ class AMIMQTTClient
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		this._client.send(message);
-
-		/*------------------------------------------------------------------------------------------------------------*/
-
 		return new Promise((resolve, reject) => {
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			try
+			{
+				this._client.send(message);
+			}
+			catch(errorMessage)
+			{
+				reject(errorMessage);
+			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
