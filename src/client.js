@@ -244,15 +244,22 @@ class AMIMQTTClient
 
 				if(this._serverName || this._discoveryTopic)
 				{
-					this._client.connect({
-						useSSL: this._useSSL,
-						userName: username,
-						password: password,
-						reconnect: true,
-						/**/
-						onSuccess: () => { resolve(this._uuid); },
-						onFailure: (x, y, errorMessage) => { reject(errorMessage); },
-					});
+					try
+					{
+						this._client.connect({
+							useSSL: this._useSSL,
+							userName: username,
+							password: password,
+							reconnect: true,
+							/**/
+							onSuccess: () => { resolve(this._uuid); },
+							onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+						});
+					}
+					catch(e)
+					{
+						reject(`error connecting to MQTT broker: ${e}`);
+					}
 				}
 				else
 				{
