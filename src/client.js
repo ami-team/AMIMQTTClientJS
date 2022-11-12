@@ -218,11 +218,11 @@ class AMIMQTTClient
 	/**
 	 * Sign in by JWT token
 	 * @param {string} password the password
-	 * @param {string} serverName the server name
+	 * @param {string} [serverName=''] the server name
 	 * @returns {Promise} A JavaScript promise object
 	 */
 
-	signInByToken(password, serverName)
+	signInByToken(password, serverName = '')
 	{
 		return new Promise((resolve, reject) => {
 
