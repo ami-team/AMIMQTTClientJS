@@ -13,7 +13,7 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import { Client, Message } from 'paho-mqtt';
+import {Client, Message} from 'paho-mqtt';
 
 import JSPath from 'jspath';
 
@@ -604,10 +604,10 @@ class AMIMQTTClient
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		if(reconnect) {
-			console.log(`onConnected: client \`${this._uuid}\` reconnected to server URL \`${this._endpoint}\``);
+			console.log(`onConnected: client \`${this._uuid}\` reconnected to server \`${this._endpoint}\``);
 		}
 		else {
-			console.log(`onConnected: client \`${this._uuid}\` connected to server URL \`${this._endpoint}\``);
+			console.log(`onConnected: client \`${this._uuid}\` connected to server \`${this._endpoint}\``);
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
