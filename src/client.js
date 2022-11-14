@@ -387,13 +387,13 @@ class AMIMQTTClient
 						timeout: options.timeout || 10000,
 						/**/
 						onSuccess: () => { resolve(); },
-						onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+						onFailure: (x, y, errorMessage) => { reject(`error subscribing to topic \`${topic}\`: ${errorMessage}`); },
 					}
 				);
 			}
 			catch(errorMessage)
 			{
-				reject(errorMessage);
+				reject(`error subscribing to topic \`${topic}\`: ${errorMessage}`);
 			}
 		});
 	}
@@ -422,13 +422,13 @@ class AMIMQTTClient
 						timeout: options.timeout || 10000,
 						/**/
 						onSuccess: () => { resolve(); },
-						onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+						onFailure: (x, y, errorMessage) => { reject(`error unsubscribing to topic \`${topic}\`: ${errorMessage}`); },
 					}
 				);
 			}
 			catch(errorMessage)
 			{
-				reject(errorMessage);
+				reject(`error unsubscribing to topic \`${topic}\`: ${errorMessage}`);
 			}
 		});
 	}
@@ -548,7 +548,7 @@ class AMIMQTTClient
 			}
 			catch(errorMessage)
 			{
-				reject(errorMessage);
+				reject(`error sending command \`${command}\`: ${errorMessage}`);
 			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
