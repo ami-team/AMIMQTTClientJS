@@ -253,7 +253,7 @@ class AMIMQTTClient
 							reconnect: true,
 							/**/
 							onSuccess: () => { resolve(this._uuid); },
-							onFailure: (x, y, errorMessage) => { reject(errorMessage); },
+							onFailure: (x, y, errorMessage) => { reject(`error connecting to MQTT broker: ${errorMessage}`); },
 						});
 					}
 					catch(errorMessage)
